@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\api;
 
 use App\Models\User;
+use Laravel\Passport\Token;
 use Illuminate\Http\Request;
+use Laravel\Passport\RefreshToken;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -23,7 +25,7 @@ class AuthController extends Controller
             return response()->json(['token' => $token]);
         
     }
-    
+
     public function register(Request $request){
         $validatedData = $request->validate([
             'name' => 'required|max:55',
@@ -40,5 +42,20 @@ class AuthController extends Controller
         $token = $user->createToken('authToken')->accessToken;
         
         return response()->json(['token' => $token]);
+    }
+    public function logout(){
+        // revoke token
+        
+        Auth::logout();
+        return response()->json(['message' => 'Successfully logged out']);
+    }
+    public function me(){
+        return response()->json(Auth::user());
+    }
+    public function refresh(){
+        // revoke old token
+        $oldToken = Auth::user()->token();
+        $oldToken->revoke();
+        return response()->json(['token' => Auth::user()->createToken('authToken')->accessToken]);
     }
 }
