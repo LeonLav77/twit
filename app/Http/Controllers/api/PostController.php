@@ -54,4 +54,8 @@ class PostController extends Controller
         $post->delete();
         return response()->json(['success' => 'Post deleted']);
     }
+    public function comments($id){
+        $post = Post::find($id);
+        return response()->json($post->comments);
+    }
 }
