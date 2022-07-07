@@ -55,7 +55,7 @@ class PostController extends Controller
         return response()->json(['success' => 'Post deleted']);
     }
     public function comments($id){
-        $post = Post::find($id);
+        $post = Post::findOrFail($id);
         return response()->json($post->comments);
     }
     public function likers($id){

@@ -32,23 +32,31 @@ Route::get('/users', [UserController::class, 'index'])->middleware('auth:api');
 // get all posts
 // get single post
 // get your posts
-Route::get('/posts', [PostController::class, 'all']);
-Route::get('/posts/{id}', [PostController::class, 'find']);
-Route::post('/posts', [PostController::class, 'create'])->middleware('auth:api');
-Route::put('/posts/{id}', [PostController::class, 'update'])->middleware('auth:api');
-Route::delete('/posts/{id}', [PostController::class, 'delete'])->middleware('auth:api');
-Route::get('/post/{id}/likers', [PostController::class, 'likers']);
-Route::get('/post/{id}/likes', [PostController::class, 'likes']);
+Route::prefix('posts')->group(function (){
+    Route::get('/', [PostController::class, 'all']);
+    Route::get('/{id}', [PostController::class, 'find']);
+    Route::middleware('auth:api')->group(function(){
+        Route::post('/', [PostController::class, 'create'])->middleware('auth:api');
+        Route::put('/{id}', [PostController::class, 'update'])->middleware('auth:api');
+        Route::delete('/{id}', [PostController::class, 'delete'])->middleware('auth:api');
+    });
+});
 
-Route::get('/post/{id}', [PostController::class, 'comments']);
-Route::post('/post/comment', [CommentController::class, 'create'])->middleware('auth:api');
-Route::put('/post/comment/{id}', [CommentController::class, 'edit'])->middleware('auth:api');
-Route::delete('/post/comment/{id}', [CommentController::class, 'delete'])->middleware('auth:api');
-
+Route::prefix('post')->group(function (){
+    Route::get('/{id}', [PostController::class, 'comments']);
+    
+    Route::get('/{id}/likers', [PostController::class, 'likers']);
+    Route::get('/{id}/likes', [PostController::class, 'likes']);
+    Route::middleware('auth:api')->group(function(){
+        Route::post('/comment', [CommentController::class, 'create']);
+        Route::put('/comment/{id}', [CommentController::class, 'edit']);
+        Route::delete('/comment/{id}', [CommentController::class, 'delete']);
+        Route::post('/{id}/like', [LikeController::class, 'like']);
+        Route::post('/{id}/unlike', [LikeController::class, 'unlike']);
+    });
+});
 Route::get('/user/{id}', [UserController::class, 'show']);
 
-Route::post('/post/{id}/like', [LikeController::class, 'like'])->middleware('auth:api');
-Route::post('/post/{id}/unlike', [LikeController::class, 'unlike'])->middleware('auth:api');
 
 // these route names do not follow a standard, i should fix that
 // group prefixes
