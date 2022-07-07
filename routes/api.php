@@ -37,7 +37,8 @@ Route::get('/posts/{id}', [PostController::class, 'find']);
 Route::post('/posts', [PostController::class, 'create'])->middleware('auth:api');
 Route::put('/posts/{id}', [PostController::class, 'update'])->middleware('auth:api');
 Route::delete('/posts/{id}', [PostController::class, 'delete'])->middleware('auth:api');
-Route::post('/post/{id}/likes', [PostController::class, 'like']);
+Route::get('/post/{id}/likers', [PostController::class, 'likers']);
+Route::get('/post/{id}/likes', [PostController::class, 'likes']);
 
 Route::get('/post/{id}', [PostController::class, 'comments']);
 Route::post('/post/comment', [CommentController::class, 'create'])->middleware('auth:api');
@@ -50,3 +51,5 @@ Route::post('/post/{id}/like', [LikeController::class, 'like'])->middleware('aut
 Route::post('/post/{id}/unlike', [LikeController::class, 'unlike'])->middleware('auth:api');
 
 // these route names do not follow a standard, i should fix that
+// group prefixes
+// group middleware routes

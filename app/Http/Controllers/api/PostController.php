@@ -58,4 +58,12 @@ class PostController extends Controller
         $post = Post::find($id);
         return response()->json($post->comments);
     }
+    public function likers($id){
+        $post = Post::findOrFail($id);
+        return response()->json($post->likes);
+    }
+    public function likes($id){
+        $post = Post::findOrFail($id);
+        return response()->json($post->likes->count());
+    }
 }
